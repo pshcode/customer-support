@@ -32,6 +32,11 @@ public class TicketServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getSession().getAttribute("username") == null) {
+			response.sendRedirect("login");
+			return;
+		}
+
 		String action = request.getParameter("action");
 
 		if (action == null) {
@@ -57,6 +62,11 @@ public class TicketServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getSession().getAttribute("username") == null) {
+			response.sendRedirect("login");
+			return;
+		}
+
 		String action = request.getParameter("action");
 
 		if (action == null) {
@@ -126,11 +136,9 @@ public class TicketServlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/jsp/view/listTickets.jsp").forward(request, response);
 	}
 
-	private void createTicket(HttpServletRequest request,
-		HttpServletResponse response)
-		throws ServletException, IOException {
+	private void createTicket(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Ticket ticket = new Ticket();
-		ticket.setCustomerName(request.getParameter("customerName"));
+		ticket.setCustomerName((String)request.getSession().getAttribute("username"));
 		ticket.setSubject(request.getParameter("subject"));
 		ticket.setBody(request.getParameter("body"));
 
